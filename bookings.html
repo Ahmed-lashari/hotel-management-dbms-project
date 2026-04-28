@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookings — HotelBase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    /* Booking detail panel */
+    .detail-panel {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .9rem 1rem;
+      margin: .75rem 0;
+      font-size: .82rem;
+    }
+    .detail-panel .dp-row { display:flex; justify-content:space-between; padding:.2rem 0; }
+    .detail-panel .dp-label { color:var(--ink-soft); }
+    .detail-panel .dp-val   { font-weight:600; }
+    /* Action button row in table */
+    .action-row { display:flex; gap:.35rem; align-items:center; flex-wrap:wrap; }
+    /* Status filter tabs */
+    .tab-bar { display:flex; gap:.5rem; margin-bottom:1.2rem; }
+    .tab {
+      padding:.4rem 1rem; border-radius:99px;
+      font-size:.78rem; font-weight:600; cursor:pointer;
+      border:1.5px solid var(--border);
+      background:var(--bg-card); color:var(--ink-soft);
+      transition:var(--transition);
+    }
+    .tab:hover, .tab.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">H</div>
+    <div><div class="brand-name">HotelBase</div><div class="brand-sub">Management System</div></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="index.html"     class="nav-item"><span class="nav-icon">◈</span><span>Dashboard</span></a>
+    <a href="customers.html" class="nav-item"><span class="nav-icon">◉</span><span>Customers</span></a>
+    <a href="rooms.html"     class="nav-item"><span class="nav-icon">▦</span><span>Rooms</span></a>
+    <a href="bookings.html"  class="nav-item active"><span class="nav-icon">◷</span><span>Bookings</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="db-badge"><span class="db-dot"></span><span>Supabase Connected</span></div>
+  </div>
+</aside>
+
+<main class="main-content">
+  <header class="topbar">
+    <div>
+      <h1 class="page-title">Bookings</h1>
+      <p class="page-sub">Book, Check-in & Check-out management</p>
+    </div>
+    <button class="btn btn-primary" onclick="openNewBookingModal()">+ New Booking</button>
+  </header>
+
+  <!-- Status Filter Tabs -->
+  <div class="tab-bar">
+    <div class="tab active" onclick="filterByStatus('all',   this)">All</div>
+    <div class="tab"        onclick="filterByStatus('Booked',     this)">Booked</div>
+    <div class="tab"        onclick="filterByStatus('Checked-in', this)">Checked-in</div>
+    <div class="tab"        onclick="filterByStatus('Completed',  this)">Completed</div>
+  </div>
+
+  <!-- Bookings Table -->
+  <div class="section-card">
+    <div class="section-header">
+      <h2 class="section-title" id="tableHeading">All Bookings</h2>
+      <span id="bookingCount" style="color:var(--ink-soft);font-size:.8rem;"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Room</th>
+            <th>Type</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="bookingsBody">
+          <tr><td colspan="8" class="empty-row">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- =============================================
+     NEW BOOKING MODAL
+============================================= -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal" style="max-width:540px;">
+    <h2 class="modal-title" id="bookingModalTitle">New Booking</h2>
+    <input type="hidden" id="bEditId" />
+    <input type="hidden" id="bRoomIdHidden" />
+
+    <!-- Customer selector -->
+    <div class="field">
+      <label>Customer <span class="required">*</span></label>
+      <!--
+        SQL for populating: SELECT customer_id, name, phone FROM customers ORDER BY name
+      -->
+      <select id="bCustomer">
+        <option value="">— Select Customer —</option>
+      </select>
+    </div>
+
+    <!-- Room selector -->
+    <div class="field">
+      <label>Room <span class="required">*</span></label>
+      <!--
+        SQL for populating: SELECT room_id, room_number, room_type, price
+                            FROM rooms WHERE status='Available' ORDER BY room_number
+        (On edit, also show currently booked room)
+      -->
+      <select id="bRoom" onchange="showRoomDetail()">
+        <option value="">— Select Available Room —</option>
+      </select>
+    </div>
+
+    <!-- Room info preview -->
+    <div class="detail-panel" id="roomDetail" style="display:none;">
+      <div class="dp-row"><span class="dp-label">Type</span><span class="dp-val" id="dpType"></span></div>
+      <div class="dp-row"><span class="dp-label">Price/Night</span><span class="dp-val" id="dpPrice"></span></div>
+      <div class="dp-row"><span class="dp-label">Estimated Total</span><span class="dp-val" id="dpTotal" style="color:var(--blue)"></span></div>
+    </div>
+
+    <!-- Dates -->
+    <div class="field-row">
+      <div class="field">
+        <label>Check-in Date <span class="required">*</span></label>
+        <input type="date" id="bCheckIn" onchange="calcTotal()" />
+      </div>
+      <div class="field">
+        <label>Check-out Date <span class="required">*</span></label>
+        <input type="date" id="bCheckOut" onchange="calcTotal()" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeBookingModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBooking()">Confirm Booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="modal-overlay" id="confirmBookingModal">
+  <div class="modal confirm-dialog">
+    <h3>Cancel Booking?</h3>
+    <p>This will delete the booking and free the room. This cannot be undone.</p>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeBookingConfirm()">Keep It</button>
+      <button class="btn btn-danger"  onclick="confirmBookingDelete()">Yes, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="lib/supabase.js"></script>
+<script src="lib/db.js"></script>
+<script src="pages/bookings.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rooms — HotelBase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    /* Room card grid view */
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .room-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.3rem;
+      transition: var(--transition);
+      position: relative;
+    }
+    .room-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .room-card.occupied { border-color: var(--rose-border); background: var(--rose-light); }
+    .room-card.available { border-color: var(--green-border); }
+    .room-number {
+      font-family: var(--font-display);
+      font-size: 1.8rem; font-weight: 900;
+      color: var(--ink);
+    }
+    .room-type { font-size: .78rem; color: var(--ink-soft); font-weight: 600; text-transform: uppercase; letter-spacing:.06em; margin:.25rem 0; }
+    .room-price { font-size: 1.05rem; font-weight: 600; color: var(--blue); margin:.5rem 0; }
+    .room-actions { display:flex; gap:.4rem; margin-top:.9rem; }
+    .view-toggle { display:flex; gap:.4rem; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">H</div>
+    <div><div class="brand-name">HotelBase</div><div class="brand-sub">Management System</div></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="index.html"     class="nav-item"><span class="nav-icon">◈</span><span>Dashboard</span></a>
+    <a href="customers.html" class="nav-item"><span class="nav-icon">◉</span><span>Customers</span></a>
+    <a href="rooms.html"     class="nav-item active"><span class="nav-icon">▦</span><span>Rooms</span></a>
+    <a href="bookings.html"  class="nav-item"><span class="nav-icon">◷</span><span>Bookings</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="db-badge"><span class="db-dot"></span><span>Supabase Connected</span></div>
+  </div>
+</aside>
+
+<main class="main-content">
+  <header class="topbar">
+    <div>
+      <h1 class="page-title">Rooms</h1>
+      <p class="page-sub">Manage hotel room inventory and availability</p>
+    </div>
+    <button class="btn btn-primary" onclick="openAddModal()">+ Add Room</button>
+  </header>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <select id="filterStatus" onchange="applyFilter()">
+      <option value="">All Status</option>
+      <option value="Available">Available</option>
+      <option value="Occupied">Occupied</option>
+    </select>
+    <select id="filterType" onchange="applyFilter()">
+      <option value="">All Types</option>
+      <option value="Single">Single</option>
+      <option value="Double">Double</option>
+      <option value="Suite">Suite</option>
+      <option value="Deluxe">Deluxe</option>
+    </select>
+    <div class="view-toggle">
+      <button class="btn btn-outline btn-sm" onclick="setView('grid')" id="btnGrid">⊞ Grid</button>
+      <button class="btn btn-outline btn-sm" onclick="setView('table')" id="btnTable">☰ Table</button>
+    </div>
+    <button class="btn btn-outline" onclick="loadRooms()">↺ Refresh</button>
+    <span id="roomCount" style="margin-left:auto;color:var(--ink-soft);font-size:.8rem;"></span>
+  </div>
+
+  <!-- GRID VIEW (default) -->
+  <div id="gridView" class="rooms-grid"></div>
+
+  <!-- TABLE VIEW -->
+  <div id="tableView" class="section-card" style="display:none;">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Room #</th><th>Type</th><th>Price/Night</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="roomsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="roomModal">
+  <div class="modal">
+    <h2 class="modal-title" id="roomModalTitle">Add Room</h2>
+    <input type="hidden" id="roomEditId" />
+
+    <div class="field-row">
+      <div class="field">
+        <label>Room Number <span class="required">*</span></label>
+        <!-- UNIQUE constraint in DB -->
+        <input type="number" id="fRoomNumber" placeholder="e.g. 101" min="1" />
+      </div>
+      <div class="field">
+        <label>Room Type <span class="required">*</span></label>
+        <select id="fRoomType">
+          <option value="Single">Single</option>
+          <option value="Double">Double</option>
+          <option value="Suite">Suite</option>
+          <option value="Deluxe">Deluxe</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Price per Night (PKR) <span class="required">*</span></label>
+        <input type="number" id="fPrice" placeholder="e.g. 5000" min="0" step="0.01" />
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="fStatus">
+          <option value="Available">Available</option>
+          <option value="Occupied">Occupied</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeRoomModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRoom()">Save Room</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="modal-overlay" id="confirmRoomModal">
+  <div class="modal confirm-dialog">
+    <h3>Delete Room?</h3>
+    <p>This cannot be undone. Rooms with bookings cannot be deleted.</p>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeRoomConfirm()">Cancel</button>
+      <button class="btn btn-danger"  onclick="confirmRoomDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="lib/supabase.js"></script>
+<script src="lib/db.js"></script>
+<script src="pages/rooms.js"></script>
+</body>
+</html>

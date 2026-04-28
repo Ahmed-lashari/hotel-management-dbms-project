@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customers — HotelBase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">H</div>
+    <div>
+      <div class="brand-name">HotelBase</div>
+      <div class="brand-sub">Management System</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="index.html"     class="nav-item"><span class="nav-icon">◈</span><span>Dashboard</span></a>
+    <a href="customers.html" class="nav-item active"><span class="nav-icon">◉</span><span>Customers</span></a>
+    <a href="rooms.html"     class="nav-item"><span class="nav-icon">▦</span><span>Rooms</span></a>
+    <a href="bookings.html"  class="nav-item"><span class="nav-icon">◷</span><span>Bookings</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="db-badge"><span class="db-dot"></span><span>Supabase Connected</span></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+  <header class="topbar">
+    <div>
+      <h1 class="page-title">Customers</h1>
+      <p class="page-sub">Manage all registered hotel guests</p>
+    </div>
+    <button class="btn btn-primary" onclick="openAddModal()">+ Add Customer</button>
+  </header>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <input type="text" id="searchInput" placeholder="Search by name or phone…" oninput="handleSearch(this.value)" />
+    <button class="btn btn-outline" onclick="loadCustomers()">↺ Refresh</button>
+    <span id="totalCount" style="margin-left:auto;color:var(--ink-soft);font-size:.8rem;"></span>
+  </div>
+
+  <!-- Table -->
+  <div class="section-card">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Bookings</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="customersBody">
+          <tr><td colspan="5" class="empty-row">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- =============================================
+     ADD / EDIT MODAL
+============================================= -->
+<div class="modal-overlay" id="customerModal">
+  <div class="modal">
+    <h2 class="modal-title" id="modalTitle">Add Customer</h2>
+
+    <!-- SQL on CREATE: INSERT INTO customers (name, phone) VALUES ($1,$2) -->
+    <!-- SQL on UPDATE: UPDATE customers SET name=$1, phone=$2 WHERE customer_id=$3 -->
+    <input type="hidden" id="editId" />
+
+    <div class="field">
+      <label>Full Name <span class="required">*</span></label>
+      <input type="text" id="fieldName" placeholder="e.g. Ahmed Khan" maxlength="50" required />
+    </div>
+    <div class="field">
+      <label>Phone Number</label>
+      <input type="text" id="fieldPhone" placeholder="e.g. 0312-1234567" maxlength="15" />
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCustomer()">Save Customer</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal confirm-dialog">
+    <h3>Delete Customer?</h3>
+    <p>This action cannot be undone. If the customer has bookings, deletion will be blocked.</p>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="lib/supabase.js"></script>
+<script src="lib/db.js"></script>
+<script src="pages/customers.js"></script>
+</body>
+</html>

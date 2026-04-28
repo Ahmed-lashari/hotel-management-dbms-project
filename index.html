@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HotelBase — Hotel Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+
+<!-- ========================
+     SIDEBAR NAVIGATION
+========================= -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">H</div>
+    <div>
+      <div class="brand-name">HotelBase</div>
+      <div class="brand-sub">Management System</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="index.html" class="nav-item active">
+      <span class="nav-icon">◈</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="customers.html" class="nav-item">
+      <span class="nav-icon">◉</span>
+      <span>Customers</span>
+    </a>
+    <a href="rooms.html" class="nav-item">
+      <span class="nav-icon">▦</span>
+      <span>Rooms</span>
+    </a>
+    <a href="bookings.html" class="nav-item">
+      <span class="nav-icon">◷</span>
+      <span>Bookings</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="db-badge">
+      <span class="db-dot"></span>
+      <span>Supabase Connected</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ========================
+     MAIN CONTENT
+========================= -->
+<main class="main-content">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-sub">Overview of all hotel operations</p>
+    </div>
+    <div class="topbar-actions">
+      <span class="date-badge" id="currentDate"></span>
+    </div>
+  </header>
+
+  <!-- ========================
+       STAT CARDS
+  ========================= -->
+  <section class="stats-grid">
+    <div class="stat-card stat-blue">
+      <div class="stat-label">Total Customers</div>
+      <div class="stat-value" id="statCustomers">—</div>
+      <div class="stat-hint">Registered guests</div>
+      <!-- SQL: SELECT COUNT(*) FROM customers -->
+    </div>
+    <div class="stat-card stat-green">
+      <div class="stat-label">Total Rooms</div>
+      <div class="stat-value" id="statRooms">—</div>
+      <div class="stat-hint">All room inventory</div>
+      <!-- SQL: SELECT COUNT(*) FROM rooms -->
+    </div>
+    <div class="stat-card stat-amber">
+      <div class="stat-label">Available Rooms</div>
+      <div class="stat-value" id="statAvailable">—</div>
+      <div class="stat-hint">Ready to book</div>
+      <!-- SQL: SELECT COUNT(*) FROM rooms WHERE status='Available' -->
+    </div>
+    <div class="stat-card stat-rose">
+      <div class="stat-label">Active Bookings</div>
+      <div class="stat-value" id="statBookings">—</div>
+      <div class="stat-hint">Booked + Checked-in</div>
+      <!-- SQL: SELECT COUNT(*) FROM bookings WHERE status IN ('Booked','Checked-in') -->
+    </div>
+  </section>
+
+  <!-- ========================
+       RECENT BOOKINGS TABLE
+  ========================= -->
+  <section class="section-card">
+    <div class="section-header">
+      <h2 class="section-title">Recent Bookings</h2>
+      <a href="bookings.html" class="btn-link">View All →</a>
+    </div>
+    <!-- SQL:
+      SELECT b.booking_id, c.name, r.room_number, r.room_type,
+             b.check_in, b.check_out, b.status
+      FROM bookings b
+      JOIN customers c ON b.customer_id = c.customer_id
+      JOIN rooms r ON b.room_id = r.room_id
+      ORDER BY b.booking_id DESC
+      LIMIT 8
+    -->
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Customer</th>
+            <th>Room</th>
+            <th>Type</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="dashBookingsBody">
+          <tr><td colspan="8" class="empty-row">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ========================
+       QUICK ACTIONS
+  ========================= -->
+  <section class="quick-actions">
+    <h2 class="section-title" style="margin-bottom:1.2rem">Quick Actions</h2>
+    <div class="action-cards">
+      <a href="customers.html?action=add" class="action-card action-blue">
+        <div class="action-icon">＋</div>
+        <div class="action-label">Add Customer</div>
+      </a>
+      <a href="rooms.html?action=add" class="action-card action-green">
+        <div class="action-icon">＋</div>
+        <div class="action-label">Add Room</div>
+      </a>
+      <a href="bookings.html?action=add" class="action-card action-amber">
+        <div class="action-icon">◷</div>
+        <div class="action-label">New Booking</div>
+      </a>
+      <a href="bookings.html?filter=checkin" class="action-card action-rose">
+        <div class="action-icon">✓</div>
+        <div class="action-label">Check-in Today</div>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="lib/supabase.js"></script>
+<script src="lib/db.js"></script>
+<script src="pages/dashboard.js"></script>
+</body>
+</html>
