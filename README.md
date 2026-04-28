@@ -83,7 +83,7 @@ FOR ALL USING (true) WITH CHECK (true);
 
 ## Step 4 — Deploy to Vercel
 
-# Site is live at `---`
+### Site is live [HERE](p230001-hotel-management.vercel.app)
 
 ---
 
