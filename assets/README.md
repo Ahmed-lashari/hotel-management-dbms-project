@@ -7,7 +7,7 @@
 - CHECK constraint: `check_out > check_in`
 - UNIQUE constraint on `room_number`
 
-![ERD-Diagram](ERD.png)
+<!-- [Click for ERD Diagram](assets/erd.png) -->
 ---
 
 ## Project Structure

@@ -2,127 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>README — HotelBase</title>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
+  <!-- main.css already has sidebar, topbar, page-title, etc. -->
   <link rel="stylesheet" href="styles/main.css" />
 
-  <title>Readme - HotelBase</title>
-
-  <!-- Markdown parser -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <style>
-    body {
-      margin: 0;
-      display: flex;
-      height: 100vh;
-      background: #f7f4ef;
-      font-family: "DM Sans", sans-serif;
-    }
-
-    /* Sidebar stays fixed width */
-    .sidebar {
-      width: 260px;
-      background: #1c1916;
-      color: white;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sidebar-brand {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-    }
-
-    .brand-icon {
-      width: 40px;
-      height: 40px;
-      background: #f59e0b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      border-radius: 8px;
-    }
-
-    .brand-name {
-      font-weight: 700;
-    }
-
-    .brand-sub {
-      font-size: 12px;
-      opacity: 0.7;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .nav-item {
-      color: #ddd;
-      text-decoration: none;
-      padding: 8px;
-      border-radius: 6px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .nav-item:hover,
-    .nav-item.active {
-      background: #333;
-    }
-
-    /* Main content */
-    .main-content {
-      flex: 1;
-      padding: 30px;
-      overflow-y: auto;
-    }
-
-    .topbar {
-      margin-bottom: 20px;
-    }
-
-    .page-title {
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    /* README container */
     #readme {
       background: white;
-      padding: 25px;
-      border-radius: 10px;
-      max-width: 900px;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      max-width: 860px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      line-height: 1.6;
+      line-height: 1.75;
     }
 
-    /* Markdown styling */
     #readme h1, #readme h2, #readme h3 {
       font-family: "Playfair Display", serif;
+      margin: 1.5rem 0 .5rem;
     }
+
+    #readme p { margin: .6rem 0; }
 
     #readme code {
       font-family: "JetBrains Mono", monospace;
       background: #f3f3f3;
-      padding: 2px 4px;
+      padding: 2px 6px;
       border-radius: 4px;
+      font-size: .82rem;
     }
 
     #readme pre {
-      background: #111;
-      color: #0f0;
-      padding: 15px;
+      background: #1a1612;
+      color: #86efac;
+      padding: 1.2rem 1.4rem;
       overflow-x: auto;
       border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    #readme pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: .82rem;
+    }
+
+    #readme table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1rem 0;
+      font-size: .85rem;
+    }
+
+    #readme th, #readme td {
+      border: 1px solid #e8e2db;
+      padding: .5rem .85rem;
+      text-align: left;
+    }
+
+    #readme th {
+      background: #f7f4ef;
+      font-weight: 600;
+    }
+
+    #readme hr {
+      border: none;
+      border-top: 1px solid #e8e2db;
+      margin: 1.5rem 0;
     }
   </style>
 </head>
@@ -140,31 +93,12 @@
   </div>
 
   <nav class="sidebar-nav">
-    <a href="index.html" class="nav-item active">
-      <span class="nav-icon">◈</span>
-      <span>Dashboard</span>
-    </a>
-    <a href="customers.html" class="nav-item">
-      <span class="nav-icon">◉</span>
-      <span>Customers</span>
-    </a>
-    <a href="rooms.html" class="nav-item">
-      <span class="nav-icon">▦</span>
-      <span>Rooms</span>
-    </a>
-    <a href="bookings.html" class="nav-item">
-      <span class="nav-icon">◷</span>
-      <span>Bookings</span>
-    </a>
-    <a href="erd.html" class="nav-item">
-      <span class="nav-icon">☰</span>
-      <span>ERD-Diagram</span>
-    </a>
-    <a href="readme.html" class="nav-item">
-      <span class="nav-icon">☰</span>
-      <span>README.md</span>
-    </a>
-    
+    <a href="index.html"     class="nav-item"><span class="nav-icon">◈</span><span>Dashboard</span></a>
+    <a href="customers.html" class="nav-item"><span class="nav-icon">◉</span><span>Customers</span></a>
+    <a href="rooms.html"     class="nav-item"><span class="nav-icon">▦</span><span>Rooms</span></a>
+    <a href="bookings.html"  class="nav-item"><span class="nav-icon">◷</span><span>Bookings</span></a>
+    <a href="erd.html"       class="nav-item"><span class="nav-icon">⬡</span><span>ERD Diagram</span></a>
+    <a href="readme.html"    class="nav-item active"><span class="nav-icon">☰</span><span>README</span></a>
   </nav>
 
   <div class="sidebar-footer">
@@ -174,30 +108,31 @@
     </div>
   </div>
 </aside>
+
 <!-- MAIN -->
 <main class="main-content">
-
   <header class="topbar">
-    <h1 class="page-title">README Documentation</h1>
+    <div>
+      <h1 class="page-title">README Documentation</h1>
+      <p class="page-sub">Setup guide, SQL schema & deployment instructions</p>
+    </div>
   </header>
 
-  <!-- Markdown renders here -->
-  <div id="readme">Loading README...</div>
-
+  <div id="readme">Loading README…</div>
 </main>
 
-<!-- SCRIPT -->
 <script>
-  fetch("README.md")
-    .then(res => res.text())
-    .then(md => {
-      document.getElementById("readme").innerHTML =
-        marked.parse(md);
+  fetch("assets/README.md")
+    .then(res => {
+      if (!res.ok) throw new Error("File not found");
+      return res.text();
     })
-    .catch(err => {
+    .then(md => {
+      document.getElementById("readme").innerHTML = marked.parse(md);
+    })
+    .catch(() => {
       document.getElementById("readme").innerHTML =
-        "<p style='color:red'>Failed to load README.md</p>";
-      console.error(err);
+        "<p style='color:#e11d48'>❌ Failed to load README.md — make sure it's in the same folder.</p>";
     });
 </script>
 
