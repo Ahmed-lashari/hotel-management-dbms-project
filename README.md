@@ -1,4 +1,13 @@
 # HotelBase — Hotel Management System
+
+- All SQL is visible in `lib/db.js` as comments
+- Check ER Diagram below
+- Cardinality: Customers 1:M Bookings, Rooms 1:M Bookings
+- Foreign keys enforced at DB level (ON DELETE RESTRICT)
+- CHECK constraint: `check_out > check_in`
+- UNIQUE constraint on `room_number`
+
+![ERD-Diagram](ERD.png)
 ---
 
 ## Project Structure
@@ -26,19 +35,55 @@ hotel-mgmt/
 
 ## Backend: Why Supabase?
 
-Supabase gives you a **PostgreSQL database + REST API** for free.
-No backend server needed. Your HTML files call Supabase directly.
 
+Tables In Supabase:
+```sql
+-- Customers
+CREATE TABLE customers (
+  customer_id SERIAL PRIMARY KEY,
+  name        VARCHAR(50) NOT NULL,
+  phone       VARCHAR(15)
+);
+
+-- Rooms
+CREATE TABLE rooms (
+  room_id     SERIAL PRIMARY KEY,
+  room_number INT UNIQUE NOT NULL,
+  room_type   VARCHAR(20),
+  price       DECIMAL(10, 2),
+  status      VARCHAR(20) DEFAULT 'Available'
+);
+
+-- Bookings (CENTRALIZED TABLE)
+CREATE TABLE bookings (
+  booking_id  SERIAL PRIMARY KEY,
+  customer_id INT REFERENCES customers(customer_id) ON DELETE RESTRICT,
+  room_id     INT REFERENCES rooms(room_id)  ON DELETE RESTRICT,
+  check_in    DATE NOT NULL,
+  check_out   DATE NOT NULL,
+  status      VARCHAR(20) DEFAULT 'Booked',  -- Booked / Checked-in / Completed
+  CONSTRAINT chk_dates CHECK (check_out > check_in)
+);
+
+---
+CREATE POLICY "allow_all_customers" 
+ON customers 
+FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "allow_all_rooms"     
+ON rooms     
+FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "allow_all_bookings"  
+ON bookings  
+FOR ALL USING (true) WITH CHECK (true);
+
+```
 ---
 
 ## Step 4 — Deploy to Vercel
 
-1. Push your project folder to GitHub
-2. Go to https://vercel.com → Import your repo
-3. Framework preset: **Other** (static HTML)
-4. Click **Deploy**
-
-# Site is live at `https://your-project.vercel.app`
+# Site is live at `---`
 
 ---
 
@@ -97,12 +142,3 @@ Bookings is the central (junction) table.
 | Hosting  | Vercel (free static hosting) |
 
 ---
-
-## Academic Notes
-
-- All SQL is visible in `lib/db.js` as comments
-- ER Diagram uses Chen notation: open `erd.html`
-- Cardinality: Customers 1:M Bookings, Rooms 1:M Bookings
-- Foreign keys enforced at DB level (ON DELETE RESTRICT)
-- CHECK constraint: `check_out > check_in`
-- UNIQUE constraint on `room_number`

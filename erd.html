@@ -1,246 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<title>Hotel Management ERD — Chen Notation</title>
-<style>
-  body { margin:0; background:#f7f4ef; font-family:'DM Sans',sans-serif; display:flex; flex-direction:column; align-items:center; padding:2rem; }
-  h1 { font-family:Georgia,serif; font-size:1.8rem; font-weight:700; color:#1c1916; margin-bottom:.3rem; }
-  p { color:#6b6460; margin-bottom:2rem; font-size:.9rem; }
-  svg text { font-family:'DM Sans',Georgia,sans-serif; }
-</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+  
+  <!-- <meta charset="UTF-8" /> -->
+  <title>Hotel Management ERD</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f7f4ef;
+    }
+    img {
+      max-width: 95%;
+      height: auto;
+    }
+  </style>
 </head>
 <body>
-<h1>Hotel Management System — ERD</h1>
-<p>Chen Notation · 3 Entities · 2 Relationships · All attributes shown</p>
 
-<svg viewBox="0 0 1320 680" width="1320" height="680" xmlns="http://www.w3.org/2000/svg">
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">H</div>
+    <div>
+      <div class="brand-name">HotelBase</div>
+      <div class="brand-sub">Management System</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="index.html"     class="nav-item"><span class="nav-icon">◈</span><span>Dashboard</span></a>
+    <a href="customers.html" class="nav-item active"><span class="nav-icon">◉</span><span>Customers</span></a>
+    <a href="rooms.html"     class="nav-item"><span class="nav-icon">▦</span><span>Rooms</span></a>
+    <a href="bookings.html"  class="nav-item"><span class="nav-icon">◷</span><span>Bookings</span></a>
+    <a href="erd.html" class="nav-item">
+      <span class="nav-icon">☰</span>
+      <span>ERD-Diagram</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+  </div>
+</aside>
 
-  <!-- ============================================================
-       BACKGROUND GROUPS / SWIMLANES
-  ============================================================ -->
-  <!-- Customers section bg -->
-  <rect x="20" y="20" width="340" height="640" rx="18" fill="#eff6ff" stroke="#bfcffd" stroke-width="1.5"/>
-  <!-- Bookings section bg -->
-  <rect x="480" y="20" width="360" height="640" rx="18" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
-  <!-- Rooms section bg -->
-  <rect x="960" y="20" width="340" height="640" rx="18" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1.5"/>
 
-  <!-- Section labels -->
-  <text x="190" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="#2563eb" letter-spacing="1" text-decoration="none">CUSTOMERS</text>
-  <text x="660" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a" letter-spacing="1">BOOKINGS</text>
-  <text x="1130" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="#7c3aed" letter-spacing="1">ROOMS</text>
+<main class="main-content">
+  <header class="topbar">
+  <h1 class="page-title">Hotel Management ERD</h1>
+  </header>
 
-  <!-- ============================================================
-       ENTITY: CUSTOMERS (blue rectangle)
-  ============================================================ -->
-  <rect x="105" y="290" width="170" height="60" rx="6" fill="#2563eb" stroke="#1d4ed8" stroke-width="2"/>
-  <text x="190" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" letter-spacing=".5">CUSTOMERS</text>
-
-  <!-- ── Attributes of CUSTOMERS ── -->
-
-  <!-- customer_id (PK — underlined, bold ellipse) -->
-  <ellipse cx="110" cy="130" rx="68" ry="26" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
-  <text x="110" y="127" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af" text-decoration="underline">customer_id</text>
-  <text x="110" y="141" text-anchor="middle" font-size="9.5" fill="#3b82f6">INT · PK · AUTO INC</text>
-  <!-- Line: customer_id → CUSTOMERS -->
-  <line x1="110" y1="156" x2="145" y2="290" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- name (NOT NULL) -->
-  <ellipse cx="55" cy="220" rx="52" ry="22" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
-  <text x="55" y="217" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">name</text>
-  <text x="55" y="230" text-anchor="middle" font-size="9" fill="#3b82f6">VARCHAR(50)·NN</text>
-  <!-- Line: name → CUSTOMERS -->
-  <line x1="90" y1="220" x2="130" y2="295" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- phone (nullable) -->
-  <ellipse cx="240" cy="185" rx="52" ry="22" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
-  <text x="240" y="182" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">phone</text>
-  <text x="240" y="196" text-anchor="middle" font-size="9" fill="#3b82f6">VARCHAR(15)</text>
-  <!-- Line: phone → CUSTOMERS -->
-  <line x1="230" y1="207" x2="220" y2="290" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- ============================================================
-       ENTITY: BOOKINGS (green rectangle)
-  ============================================================ -->
-  <rect x="575" y="290" width="170" height="60" rx="6" fill="#16a34a" stroke="#15803d" stroke-width="2"/>
-  <text x="660" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" letter-spacing=".5">BOOKINGS</text>
-
-  <!-- ── Attributes of BOOKINGS ── -->
-
-  <!-- booking_id (PK) -->
-  <ellipse cx="580" cy="110" rx="68" ry="26" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
-  <text x="580" y="107" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d" text-decoration="underline">booking_id</text>
-  <text x="580" y="121" text-anchor="middle" font-size="9.5" fill="#22c55e">INT · PK · AUTO INC</text>
-  <!-- line -->
-  <line x1="580" y1="136" x2="610" y2="290" stroke="#86efac" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- customer_id (FK) -->
-  <ellipse cx="530" cy="205" rx="58" ry="24" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="530" y="201" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">customer_id</text>
-  <text x="530" y="215" text-anchor="middle" font-size="9" fill="#22c55e">INT · FK</text>
-  <line x1="556" y1="205" x2="595" y2="290" stroke="#86efac" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- room_id (FK) -->
-  <ellipse cx="740" cy="205" rx="52" ry="24" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="740" y="201" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">room_id</text>
-  <text x="740" y="215" text-anchor="middle" font-size="9" fill="#22c55e">INT · FK</text>
-  <line x1="726" y1="205" x2="710" y2="290" stroke="#86efac" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- check_in -->
-  <ellipse cx="545" cy="490" rx="52" ry="22" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="545" y="487" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">check_in</text>
-  <text x="545" y="501" text-anchor="middle" font-size="9" fill="#22c55e">DATE</text>
-  <line x1="565" y1="468" x2="610" y2="350" stroke="#86efac" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- check_out -->
-  <ellipse cx="660" cy="530" rx="52" ry="22" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="660" y="527" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">check_out</text>
-  <text x="660" y="541" text-anchor="middle" font-size="9" fill="#22c55e">DATE</text>
-  <line x1="660" y1="508" x2="660" y2="350" stroke="#86efac" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- status (Bookings) -->
-  <ellipse cx="780" cy="490" rx="52" ry="24" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="780" y="486" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">status</text>
-  <text x="780" y="499" text-anchor="middle" font-size="8.5" fill="#22c55e">VARCHAR(20)</text>
-  <text x="780" y="510" text-anchor="middle" font-size="8" fill="#4ade80">Booked/Checked-in/Completed</text>
-  <line x1="766" y1="466" x2="720" y2="350" stroke="#86efac" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- room_id attr (FK) -->
-  <ellipse cx="790" cy="110" rx="58" ry="26" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
-  <text x="790" y="107" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d" text-decoration="underline">room_id</text>
-  <text x="790" y="121" text-anchor="middle" font-size="9.5" fill="#22c55e">INT · FK · AUTO INC</text>
-  <line x1="790" y1="136" x2="735" y2="290" stroke="#86efac" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- ============================================================
-       ENTITY: ROOMS (purple rectangle)
-  ============================================================ -->
-  <rect x="1045" y="290" width="170" height="60" rx="6" fill="#7c3aed" stroke="#6d28d9" stroke-width="2"/>
-  <text x="1130" y="325" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" letter-spacing=".5">ROOMS</text>
-
-  <!-- ── Attributes of ROOMS ── -->
-
-  <!-- room_id PK -->
-  <ellipse cx="1130" cy="130" rx="68" ry="26" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
-  <text x="1130" y="127" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9" text-decoration="underline">room_id</text>
-  <text x="1130" y="141" text-anchor="middle" font-size="9.5" fill="#8b5cf6">INT · PK · AUTO INC</text>
-  <line x1="1130" y1="156" x2="1130" y2="290" stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- room_number UNIQUE -->
-  <ellipse cx="1020" cy="200" rx="62" ry="25" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
-  <text x="1020" y="197" text-anchor="middle" font-size="11" font-weight="600" fill="#6d28d9">room_number</text>
-  <text x="1020" y="210" text-anchor="middle" font-size="9" fill="#8b5cf6">INT · UNIQUE</text>
-  <line x1="1040" y1="224" x2="1070" y2="290" stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- room_type -->
-  <ellipse cx="1240" cy="200" rx="58" ry="24" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
-  <text x="1240" y="197" text-anchor="middle" font-size="11" font-weight="600" fill="#6d28d9">room_type</text>
-  <text x="1240" y="211" text-anchor="middle" font-size="9" fill="#8b5cf6">VARCHAR(20)</text>
-  <line x1="1224" y1="224" x2="1185" y2="290" stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- price -->
-  <ellipse cx="1020" cy="430" rx="58" ry="24" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
-  <text x="1020" y="427" text-anchor="middle" font-size="11" font-weight="600" fill="#6d28d9">price</text>
-  <text x="1020" y="440" text-anchor="middle" font-size="9" fill="#8b5cf6">DECIMAL(10,2)</text>
-  <line x1="1040" y1="406" x2="1080" y2="350" stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- status (Rooms) -->
-  <ellipse cx="1240" cy="430" rx="58" ry="26" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
-  <text x="1240" y="426" text-anchor="middle" font-size="11" font-weight="600" fill="#6d28d9">status</text>
-  <text x="1240" y="440" text-anchor="middle" font-size="8.5" fill="#8b5cf6">VARCHAR(20)</text>
-  <text x="1240" y="452" text-anchor="middle" font-size="8" fill="#a78bfa">Available/Occupied</text>
-  <line x1="1224" y1="404" x2="1180" y2="350" stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="5,3"/>
-
-  <!-- ============================================================
-       RELATIONSHIP 1: "Customer makes Booking" (orange diamond)
-       Between CUSTOMERS (1) and BOOKINGS (M)
-  ============================================================ -->
-  <!-- Diamond centered at ~(385, 320) -->
-  <polygon points="385,285 440,320 385,355 330,320" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
-  <text x="385" y="316" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Customer</text>
-  <text x="385" y="330" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">makes</text>
-  <text x="385" y="344" text-anchor="middle" font-size="10" font-weight="600" fill="#fef3c7">Booking</text>
-
-  <!-- Line: CUSTOMERS entity → Diamond -->
-  <line x1="275" y1="320" x2="330" y2="320" stroke="#1a1612" stroke-width="2"/>
-  <!-- Cardinality "1" on CUSTOMERS side (single vertical bar) -->
-  <line x1="280" y1="312" x2="280" y2="328" stroke="#1a1612" stroke-width="2.5"/>
-
-  <!-- Line: Diamond → BOOKINGS entity -->
-  <line x1="440" y1="320" x2="575" y2="320" stroke="#1a1612" stroke-width="2"/>
-  <!-- Cardinality "M" on BOOKINGS side (crow's foot: arrow + bar) -->
-  <!-- vertical stop bar -->
-  <line x1="568" y1="311" x2="568" y2="329" stroke="#1a1612" stroke-width="2.5"/>
-  <!-- crow's foot lines (3 lines fanning from 575 toward 555) -->
-  <line x1="575" y1="320" x2="555" y2="308" stroke="#1a1612" stroke-width="2"/>
-  <line x1="575" y1="320" x2="555" y2="320" stroke="#1a1612" stroke-width="2"/>
-  <line x1="575" y1="320" x2="555" y2="332" stroke="#1a1612" stroke-width="2"/>
-
-  <!-- Cardinality labels -->
-  <text x="300" y="310" font-size="14" font-weight="800" fill="#2563eb">1</text>
-  <text x="545" y="310" font-size="14" font-weight="800" fill="#16a34a">M</text>
-
-  <!-- ============================================================
-       RELATIONSHIP 2: "Room assigned to Booking" (orange diamond)
-       Between ROOMS (1) and BOOKINGS (M)
-  ============================================================ -->
-  <polygon points="875,285 930,320 875,355 820,320" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
-  <text x="875" y="314" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">Room</text>
-  <text x="875" y="328" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">assigned to</text>
-  <text x="875" y="342" text-anchor="middle" font-size="10" font-weight="600" fill="#fef3c7">Booking</text>
-
-  <!-- Line: BOOKINGS → Diamond -->
-  <line x1="745" y1="320" x2="820" y2="320" stroke="#1a1612" stroke-width="2"/>
-  <!-- crow's foot on BOOKINGS side -->
-  <line x1="748" y1="311" x2="748" y2="329" stroke="#1a1612" stroke-width="2.5"/>
-  <line x1="745" y1="320" x2="765" y2="308" stroke="#1a1612" stroke-width="2"/>
-  <line x1="745" y1="320" x2="765" y2="320" stroke="#1a1612" stroke-width="2"/>
-  <line x1="745" y1="320" x2="765" y2="332" stroke="#1a1612" stroke-width="2"/>
-
-  <!-- Line: Diamond → ROOMS entity -->
-  <line x1="930" y1="320" x2="1045" y2="320" stroke="#1a1612" stroke-width="2"/>
-  <!-- Cardinality "1" on ROOMS side -->
-  <line x1="1038" y1="311" x2="1038" y2="329" stroke="#1a1612" stroke-width="2.5"/>
-
-  <!-- Cardinality labels -->
-  <text x="760" y="310" font-size="14" font-weight="800" fill="#16a34a">M</text>
-  <text x="1020" y="310" font-size="14" font-weight="800" fill="#7c3aed">1</text>
-
-  <!-- ============================================================
-       LEGEND (bottom center)
-  ============================================================ -->
-  <rect x="355" y="600" width="610" height="58" rx="10" fill="#fff" stroke="#e8e2db" stroke-width="1.5"/>
-  <!-- Entity -->
-  <rect x="375" y="617" width="30" height="16" rx="3" fill="#2563eb"/>
-  <text x="412" y="629" font-size="10.5" fill="#1c1916" font-weight="500">Entity</text>
-  <!-- Attribute -->
-  <ellipse cx="480" cy="625" rx="22" ry="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="508" y="629" font-size="10.5" fill="#1c1916" font-weight="500">Attribute</text>
-  <!-- PK -->
-  <ellipse cx="590" cy="625" rx="22" ry="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
-  <text x="590" y="622" text-anchor="middle" font-size="8.5" text-decoration="underline" fill="#15803d" font-weight="700">pk</text>
-  <text x="618" y="629" font-size="10.5" fill="#1c1916" font-weight="500">Primary Key</text>
-  <!-- Relationship -->
-  <polygon points="700,619 720,625 700,631 680,625" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
-  <text x="730" y="629" font-size="10.5" fill="#1c1916" font-weight="500">Relationship</text>
-  <!-- 1:M -->
-  <line x1="800" y1="625" x2="820" y2="625" stroke="#1a1612" stroke-width="2"/>
-  <line x1="803" y1="618" x2="803" y2="632" stroke="#1a1612" stroke-width="2"/>
-  <line x1="820" y1="625" x2="835" y2="618" stroke="#1a1612" stroke-width="2"/>
-  <line x1="820" y1="625" x2="835" y2="625" stroke="#1a1612" stroke-width="2"/>
-  <line x1="820" y1="625" x2="835" y2="632" stroke="#1a1612" stroke-width="2"/>
-  <text x="842" y="629" font-size="10.5" fill="#1c1916" font-weight="500">1 : M</text>
-
-  <!-- Dashed line = attribute connection -->
-  <line x1="375" y1="645" x2="410" y2="645" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="4,3"/>
-  <text x="418" y="649" font-size="10" fill="#6b6460">Attribute link (dashed)</text>
-
-  <line x1="500" y1="645" x2="535" y2="645" stroke="#1a1916" stroke-width="2"/>
-  <text x="543" y="649" font-size="10" fill="#6b6460">Entity–Relationship link (solid)</text>
-
-  <!-- Title box -->
-  <rect x="390" y="55" width="540" height="40" rx="8" fill="#1a1612" opacity=".03"/>
-</svg>
+  <img src="erd.png" alt="Hotel Management ERD">
+  </main>
 
 </body>
 </html>
